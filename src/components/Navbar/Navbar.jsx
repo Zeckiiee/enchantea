@@ -1,42 +1,126 @@
-import { Link, Outlet } from 'react-router-dom'
-import { IoMenu } from "react-icons/io5";
-import { useState } from 'react';
-import { FaXmark } from "react-icons/fa6";
-import Home from "../../pages/Home"
+import { useEffect, useState } from "react";
+import { Link, useLocation } from "react-router-dom";
+import { FiArrowRight, FiMenu, FiX } from "react-icons/fi";
+import { LuLeaf } from "react-icons/lu";
 
-
+const navLinks = [
+  { label: "Home", to: "/" },
+  { label: "Products", to: "/products" },
+  { label: "About Us", to: "/aboutus" },
+];
 
 export default function Navbar() {
-  const [show, setShow] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+  const location = useLocation();
 
-  const handleClick =()=>setShow(!show)
-    
-  
+  useEffect(() => {
+    const handleScroll = () => setIsScrolled(window.scrollY > 18);
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  useEffect(() => {
+    setIsOpen(false);
+  }, [location.pathname]);
+
+  const isActive = (path) => {
+    if (path === "/aboutus") {
+      return (
+        location.pathname === "/aboutus" || location.pathname === "/about"
+      );
+    }
+
+    return location.pathname === path;
+  };
+
   return (
-    <>
-    <div className="w-full h-24  text-[#000000] bg-[#FFF5E3] z-10 flex px-14 justify-between items-center shadow-xl border-b-[1px] border-gray-500 relative">
-        <div className=' w-44 z-10'>
-            <Link to={"/navbar/home"}><h1 className='text-3xl font-bold text-transparent bg-clip-text text-gradient bg-gradient-to-r from-[#f9b83c] via-[#dea14c] to-[#c1905e]'>Enchantea</h1></Link>
-        </div>
-        <div onClick={handleClick} className=' z-10 text-3xl block lg:hidden cursor-pointer'> 
-        {show ? <FaXmark />  :  <IoMenu/>}
-        </div>
-   
-        <ul className=' hidden lg:flex gap-10 text-lg font-semibold'>
-            <li> <Link to={"/"}>Home</Link></li>
-            <li> <Link to={"/products"}>Product</Link></li>
-            <li> <Link to={"/aboutus "}>About us</Link> </li>
-        </ul>
+    <header className="fixed inset-x-0 top-0 z-50 px-4 py-4 sm:px-6 lg:px-10">
+      <div
+        className={`nav-blur mx-auto flex max-w-7xl items-center justify-between rounded-full border border-white/60 px-4 py-3 transition duration-500 sm:px-6 ${
+          isScrolled || location.pathname !== "/"
+            ? "bg-white/76 shadow-[0_18px_48px_rgba(97,60,34,0.14)]"
+            : "bg-white/58 shadow-[0_14px_38px_rgba(97,60,34,0.1)]"
+        }`}
+      >
+        <Link to="/" className="inline-flex items-center gap-3">
+          <span className="flex h-11 w-11 items-center justify-center rounded-full bg-[var(--espresso)] text-lg text-[#f8dcc1] shadow-[0_12px_30px_rgba(88,55,32,0.18)]">
+            <LuLeaf />
+          </span>
+          <span className="font-heading text-3xl text-[var(--ink)] sm:text-4xl">
+            Enchantea
+          </span>
+        </Link>
 
-        <ul className={` ${show ? 'translate-x-[0]' :''}  duration-300 translate-x-[-100%]  absolute top-0 gap-20 w-[50%] flex flex-col text-2xl justify-center items-center  left-0 h-screen lg:hidden bg-[#FFF5E3] lg:gap-10 lg:text-lg font-semibold`}>
-          <li> <Link to={"/"}>Home</Link> </li>
-          <li> <Link to={"/products"}>Product</Link></li>
-          <li> <Link to={"/aboutus "}>About us</Link> </li>
-        </ul>
-    </div>
-    <div>
-      <Outlet/>
-    </div>
-    </>
-  )
+        <nav className="hidden items-center gap-2 md:flex">
+          {navLinks.map((link) => (
+            <Link
+              key={link.to}
+              to={link.to}
+              className={`relative rounded-full px-4 py-2 text-sm font-semibold transition duration-300 ${
+                isActive(link.to)
+                  ? "bg-[var(--blush)] text-[var(--brown-sugar)]"
+                  : "text-[var(--ink)] hover:bg-white/70"
+              }`}
+            >
+              {link.label}
+            </Link>
+          ))}
+        </nav>
+
+        <div className="hidden md:block">
+          <Link to="/products" className="btn-primary !px-5 !py-3 !text-sm">
+            Order a sip
+            <FiArrowRight />
+          </Link>
+        </div>
+
+        <button
+          type="button"
+          onClick={() => setIsOpen((currentValue) => !currentValue)}
+          className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-white/60 bg-white/72 text-xl text-[var(--ink)] transition duration-300 hover:bg-white md:hidden"
+          aria-label="Toggle navigation"
+        >
+          {isOpen ? <FiX /> : <FiMenu />}
+        </button>
+      </div>
+
+      <div
+        className={`mt-3 transition duration-300 md:hidden ${
+          isOpen
+            ? "pointer-events-auto translate-y-0 opacity-100"
+            : "pointer-events-none -translate-y-2 opacity-0"
+        }`}
+      >
+        <div className="nav-blur overflow-hidden rounded-[30px] border border-white/70 bg-white/86 p-4 shadow-[0_24px_60px_rgba(97,60,34,0.12)]">
+          <div className="flex flex-col gap-2">
+            {navLinks.map((link) => (
+              <Link
+                key={link.to}
+                to={link.to}
+                className={`rounded-[22px] px-4 py-3 text-sm font-semibold transition duration-300 ${
+                  isActive(link.to)
+                    ? "bg-[var(--blush)] text-[var(--brown-sugar)]"
+                    : "text-[var(--ink)] hover:bg-[var(--cream-deep)]"
+                }`}
+              >
+                {link.label}
+              </Link>
+            ))}
+          </div>
+
+          <Link
+            to="/products"
+            className="btn-primary mt-4 w-full justify-center text-sm"
+          >
+            Explore the menu
+            <FiArrowRight />
+          </Link>
+        </div>
+      </div>
+    </header>
+  );
 }

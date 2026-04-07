@@ -1,29 +1,66 @@
-
+import { useEffect } from "react";
+import { Route, Routes, useLocation } from "react-router-dom";
+import Footer from "./components/Footer/Footer";
 import Navbar from "./components/Navbar/Navbar";
-import Home from "./pages/Home";
-import Products from "./pages/Products";
+import PageTransition from "./components/PageTransition/PageTransition";
+import ScrollProgress from "./components/ScrollProgress/ScrollProgress";
 import AboutUs from "./pages/AboutUs";
 import LandingPage from "./pages/LandingPage";
-import { Route, Routes} from 'react-router-dom';
-//import Carousel from "./components/PracticeCarousel/Carousel";
+import Products from "./pages/Products";
+
 function App() {
-  
+  const location = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [location.pathname]);
+
   return (
-    // <div>
-    //   <Carousel/>
-    // </div>
-    <div className="overflow-hidden">
-    <Routes>
-        <Route path="/" element={<LandingPage/>}/>
-        <Route path="/products" element={<Products/>}/>          
-        <Route path="/aboutus" element={<AboutUs/>}/>
-    </Routes>
+    <div className="min-h-screen overflow-hidden text-[var(--ink)]">
+      <ScrollProgress pathname={location.pathname} />
+
+      <Navbar />
+
+      <main className="relative z-10">
+        <Routes location={location}>
+          <Route
+            path="/"
+            element={
+              <PageTransition pathname={location.pathname}>
+                <LandingPage />
+              </PageTransition>
+            }
+          />
+          <Route
+            path="/products"
+            element={
+              <PageTransition pathname={location.pathname}>
+                <Products />
+              </PageTransition>
+            }
+          />
+          <Route
+            path="/aboutus"
+            element={
+              <PageTransition pathname={location.pathname}>
+                <AboutUs />
+              </PageTransition>
+            }
+          />
+          <Route
+            path="/about"
+            element={
+              <PageTransition pathname={location.pathname}>
+                <AboutUs />
+              </PageTransition>
+            }
+          />
+        </Routes>
+      </main>
+
+      <Footer />
     </div>
-  )
-  /*<Route path="burger" element={<Burger/>}/>
-              <Route path="cookies" element={<Cookies/>}/>
-              <Route path="coffee" element={<Coffee/>}/>
-              <Route path="fries" element={<Fries/>}/>*/
+  );
 }
 
-export default App
+export default App;

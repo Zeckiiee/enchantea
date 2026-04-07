@@ -1,68 +1,141 @@
+import { Link } from "react-router-dom";
+import { FiArrowRight, FiClock, FiCoffee, FiHeart } from "react-icons/fi";
 import imageA from "../assets/pictures/imageA.jpg";
 import imageB from "../assets/pictures/imageB.jpg";
 import imageC from "../assets/pictures/imageC.jpg";
 import imageD from "../assets/pictures/imageD.jpg";
-import { SiTiktok } from "react-icons/si";
-import { TfiFacebook } from "react-icons/tfi";
-import { PiInstagramLogoFill } from "react-icons/pi";
-import { GrTwitter } from "react-icons/gr";
-import Navbar from "../components/Navbar/Navbar"
-import myBackground from '../assets/pictures/myBackground.png'
+import Reveal from "../components/Reveal/Reveal";
+import SectionHeading from "../components/SectionHeading/SectionHeading";
+
+const rituals = [
+  {
+    icon: <FiCoffee />,
+    title: "Premium layering",
+    description:
+      "We style each drink with soft contrast, clean toppings, and a richer dessert-like finish.",
+  },
+  {
+    icon: <FiClock />,
+    title: "Slow-made details",
+    description:
+      "From tea base to add-ons, every element is built to feel fresh, thoughtful, and worth the pause.",
+  },
+  {
+    icon: <FiHeart />,
+    title: "Warm cafe energy",
+    description:
+      "The mood is bright, creamy, and welcoming, with enough polish to feel elevated without losing its charm.",
+  },
+];
 
 export default function Home() {
-  const icons = [
-    {id:1, Logo: <SiTiktok/>},
-    {id:2, Logo: <TfiFacebook/>},
-    {id:3, Logo: <PiInstagramLogoFill/>},
-    {id:4, Logo: <GrTwitter/>}
-  ]
-  
-    
   return (
-    <>
-     <div  className=' flex-col-reverse lg:flex-row  flex justify-evenly items-center w-full relative h-fit bg-[#FFF5E3] bg-cover  bg-center' style={{backgroundImage:`url(${myBackground})`}}>
-       
-       <div className='flex custom-height w-full items-center justify-center '>
+    <section className="content-auto px-4 py-20 sm:px-6 lg:px-10">
+      <div className="mx-auto max-w-7xl">
+        <div className="grid gap-12 lg:grid-cols-[0.94fr_1.06fr] lg:items-center">
+          <div className="space-y-8">
+            <Reveal>
+              <SectionHeading
+                kicker="Inside Enchantea"
+                title="A cafe mood built for soft light, sweet cravings, and easy catch-ups."
+                description="Every detail leans into warmth and ease so the whole experience feels premium, playful, and inviting from first glance to final sip."
+              />
+            </Reveal>
 
-       <div className="custom-left-entrance flex flex-col items-center">
-       <h1 className='lg:text-3xl py-5 font-extrabold'>Discover the Magic of Enchantea</h1>
-       <div className=' flex items-center flex-col lg:w-[35rem] gap-10 px-2 text-[#000000]'>
-               
-               <p className='lg:text-xl '>Where Flavor Meets Fantasy, Sip into Enchantment with Every Brew! Immerse yourself in a world of delightful blends, where each cup tells a tale of taste and magic. Discover the extraordinary in every drop at Enchantea your journey to tea enchantment begins here!</p>
-               <div className=" flex w-[28rem] md:w-[35rem] justify-between items-center">
-                 <div className="flex gap-4">
-                 {icons.map((icon)=>{
-                   return(
-                     <div key={icon.id} className=" w-8 h-8 md:w-12 md:h-12 md:text-2xl cursor-pointer duration-200 hover:translate-y-[-5px] hover:translate-x-[-5px] rounded-lg flex justify-center items-center bg-[#C1905E] text-[#FFF5E3]">{icon.Logo}</div>
-                   )
-                   
-                 })}
-                 </div>
-                  <button className=' duration-200 hover:translate-y-[-5px] hover:translate-x-[-5px] bg-[#f9b83c] md:w-48 w-28 py-3 rounded-lg font-bold text-black hover:'>Buy Now!</button>
-               </div>
-           </div>
-       </div>
+            <div className="grid gap-4">
+              {rituals.map((ritual, index) => (
+                <Reveal
+                  key={ritual.title}
+                  delay={index * 90}
+                  className="glass-panel p-5 sm:p-6"
+                >
+                  <div className="flex gap-4">
+                    <span className="mt-1 flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--cream-deep)] text-xl text-[var(--brown-sugar)]">
+                      {ritual.icon}
+                    </span>
+                    <div className="space-y-2">
+                      <h3 className="font-heading text-3xl text-[var(--ink)]">
+                        {ritual.title}
+                      </h3>
+                      <p className="text-sm leading-7 text-[var(--muted)] sm:text-base">
+                        {ritual.description}
+                      </p>
+                    </div>
+                  </div>
+                </Reveal>
+              ))}
+            </div>
 
-       </div>
-       <div className="hidden lg:flex custom-right-entrance relative justify-center items-center custom-height w-full ">
-       
-          <div className="rounded-lg overflow-hidden absolute w-52 mb-[20rem] ml-[15rem] hover:z-10 hover:translate-y-[-40px] duration-500 hover:translate-x-[20px]">
-           <img src={imageA} alt="" />
+            <Reveal delay={200}>
+              <Link to="/aboutus" className="btn-secondary">
+                Meet the brand
+                <FiArrowRight />
+              </Link>
+            </Reveal>
           </div>
-          <div className="rounded-lg overflow-hidden absolute w-48 mt-[15rem] mr-[15rem] hover:z-10 hover:translate-y-[25px] hover:translate-x-[-25px] duration-500">
-           <img src={imageC} alt="" />
-          </div>
-          <div className="rounded-lg overflow-hidden absolute w-48 mb-[15rem] mr-[15rem] hover:z-10 hover:translate-y-[-45px] hover:translate-x-[-50px] duration-500">
-           <img src={imageD} alt="" />
-          </div>
-          <div className="rounded-lg overflow-hidden absolute w-48 hover:scale-110 hover:z-10 duration-500">
-           <img src={imageB} alt="" />
-          </div>
-          
-       </div>
-       
-       
-   </div></>
-   
-  )
+
+          <Reveal direction="left">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="soft-card overflow-hidden p-3 sm:row-span-2">
+                <div className="overflow-hidden rounded-[24px]">
+                  <img
+                    src={imageA}
+                    alt="Enchantea tea preparation"
+                    className="h-full min-h-[18rem] w-full object-cover transition duration-700 hover:scale-105 sm:min-h-[30rem]"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+              </div>
+
+              <div className="soft-card overflow-hidden p-3">
+                <div className="overflow-hidden rounded-[24px]">
+                  <img
+                    src={imageB}
+                    alt="Premium milk tea styling"
+                    className="h-64 w-full object-cover transition duration-700 hover:scale-105"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+              </div>
+
+              <div className="glass-panel flex flex-col justify-between gap-5 p-6">
+                <p className="font-heading text-3xl text-[var(--ink)] sm:text-4xl">
+                  The kind of place that makes a plain tea break feel special.
+                </p>
+                <p className="text-sm uppercase tracking-[0.28em] text-[var(--brown-sugar)]">
+                  Cafe direction
+                </p>
+              </div>
+
+              <div className="soft-card overflow-hidden p-3">
+                <div className="overflow-hidden rounded-[24px]">
+                  <img
+                    src={imageC}
+                    alt="Cozy milk tea corner"
+                    className="h-60 w-full object-cover transition duration-700 hover:scale-105"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+              </div>
+
+              <div className="soft-card overflow-hidden p-3">
+                <div className="overflow-hidden rounded-[24px]">
+                  <img
+                    src={imageD}
+                    alt="Enchantea drink composition"
+                    className="h-60 w-full object-cover transition duration-700 hover:scale-105"
+                    loading="lazy"
+                    decoding="async"
+                  />
+                </div>
+              </div>
+            </div>
+          </Reveal>
+        </div>
+      </div>
+    </section>
+  );
 }
